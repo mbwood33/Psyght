@@ -52,7 +52,7 @@ function ResultsPage() {
             <Alert color="warning" sx={{ maxWidth: '600px', mx: 'auto', mt: 4 }}>
                 <Typography level="h4">Results Not Found</Typography>
                 <Typography>{error}</Typography>
-                <Button component={RouterLink} to="/tests" variant="solid" sx={{ mt: 2 }}>Go to Tests</Button>
+                <Button component={RouterLink} to="./tests" variant="solid" sx={{ mt: 2 }}>Go to Tests</Button>
             </Alert>
         );
     }
@@ -65,6 +65,17 @@ function ResultsPage() {
             </Box>
         );
     }
+
+    // Helper to get severity label for MDQ Part 2
+    const getMdqSeverityLabel = (value) => {
+        switch (value) {
+            case 0: return 'No problem';
+            case 1: return 'Minor problem';
+            case 2: return 'Moderate problem';
+            case 3: return 'Serious problem';
+            default: return 'N/A';
+        }
+    };
 
     // --- Dynamic Results Display Based on Test ID ---
     const renderTestSpecificResults = () => {
@@ -129,6 +140,58 @@ function ResultsPage() {
                         </Typography>
                     </Sheet>
                 );
+
+            case 'mdq':
+                const { part1YesCount, part2Severity, part3FamilyHistory, isMDQPositive } = calculatedResults;
+                const severityLabel = getMdqSeverityLabel(part2Severity);
+
+                return (
+                    <Sheet
+                        variant="solid"
+                        color={isMDQPositive ? 'danger' : 'success'}    // Red if positive screen, green otherwise
+                        sx={{ mt: 4, p: 3, borderRadius: 'md', textAlign: 'center' }}
+                    >
+                        <Typography level="h3" sx={{ mb: 1, color: 'white' }}>
+                            {test.name} Screening Outcome
+                        </Typography>
+                        <Typography level="body-lg" sx={{ mb: 2, color: 'white' }}>
+                            {isMDQPositive ? (
+                                <>
+                                    Based on your responses, the MDQ suggests a **positive screen for bipolar disorder**.
+                                    <br />
+                                    This indicates you meet the criteria for further clinical evaluation:
+                                </>
+                            ) : (
+                                <>
+                                    Based on your responses, the MDQ suggests a **negative screen for bipolar disorder**.
+                                    <br />
+                                    This means you do not meet all criteria on this screening tool.
+                                </>
+                            )}
+                        </Typography>
+                        <Box sx={{
+                            backgroundColor: 'rgba(255,255,255,0.1)',   // Implement from palette?
+                            p: 2,
+                            borderRadius: 'md',
+                            mx: 'auto',
+                            maxWidth: '500px',
+                            textAlign: 'left'
+                        }}>
+                            <Typography level="body-md" sx={{ color: 'white' }}>
+                                <Typography component="span" fontWeight="bold">Part 1 (Symptom Count):</Typography> {part1YesCount} Yes responses (at least 7 required for positive screen)
+                            </Typography>
+                            <Typography level="body-md" sx={{ color: 'white' }}>
+                                <Typography component="span" fontWeight="bold">Part 2 (Functional Impairment):</Typography> {severityLabel} (Moderate/Serious problem required for positive screen)
+                            </Typography>
+                            <Typography level="body-md" sx={{ color: 'white' }}>
+                                <Typography component="span" fontWeight="bold">Part 3 (Family History):</Typography> {part3FamilyHistory ? 'Yes' : 'No'} (Yes required for positive screen)
+                            </Typography>
+                        </Box>
+                        <Typography level="body-sm" sx={{ mt: 2, color: 'white', opacity: 0.8 }}>
+                            <Typography component="span" fontWeight="bold">Important:</Typography> This is a screening tool, not a diagnosis. If you have concerns, please consult a healthcare professional for a formal evaluation.
+                        </Typography>
+                    </Sheet>
+                );
             
             default:
                 return (
@@ -171,7 +234,7 @@ function ResultsPage() {
                     Take Another Test
                 </Button>
                 <Button
-                    onClick={() => navigate(`tests/${testId}`)}
+                    onClick={() => navigate(`/tests/${testId}`)}
                     variant="outlined"
                     color="neutral"
                     sx={{ mt: 2 }}

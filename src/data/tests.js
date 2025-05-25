@@ -5,6 +5,7 @@
 // * ASRS-v1.1
 
 export const tests = [
+    // PHQ-9 (Patient Health Questionnaire):
     {
         id: 'phq9',
         name: 'Patient Health Questionnaire (PHQ-9)',
@@ -218,7 +219,7 @@ export const tests = [
             { range: [15, 21], interpretation: 'Severe anxiety' },
         ],
     },
-    // ASRS-v1.1 Test
+    // ASRS-v1.1 (Adult ADHD Self-Report Scale):
     {
         id: 'asrs-v1.1',
         name: 'ASRS-v1.1 (Adult ADHD Self-Report Scale)',
@@ -485,5 +486,173 @@ export const tests = [
         // Its primary interpretation is the Part A screening.
         // We can add a placeholder or remove if not needed for generic display.
         scoring: [],    // ASRS interpretation is handled by its specific calculator
+    },
+    // MDQ (Mood Disorder Questionnaire):
+    {
+        id: 'mdq',
+        name: 'Mood Disorder Questionnaire (MDQ)',
+        shortName: 'MDQ',
+        description: 'The MDQ is a self-report screening tool for bipolar disorder. It assesses whether you have experienced symptoms of mania or hypomania, how disruptive they have been, and if there is a family history of bipolar disorder.',
+        instructions: 'Please answer the following questions based on your experiences.', // General instruction
+        questions: [
+            // Part 1: Yes/No questions (score 1 for Yes, 0 for No)
+            {
+                id: 'mdq-q1',
+                text: 'Has there ever been a period of time when you were not your usual self and ... you felt so good or so high that other people thought you were not your usual self or you were so high that you got into trouble?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q2',
+                text: '... you were so irritable that you shouted at people or started arguments or fights?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q3',
+                text: '... you felt much more self-confident than usual?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q4',
+                text: '... you needed less sleep than usual (e.g., felt rested after 3 hours sleep or less) ?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q5',
+                text: '... you were more talkative or spoke faster than usual?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q6',
+                text: '... thoughts raced through your head or you couldn\'t slow your mind down?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q7',
+                text: '... you were so easily distracted by things around you that you had trouble concentrating or staying on track?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q8',
+                text: '... you had more energy than usual?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q9',
+                text: '... you were much more active than usual (e.g., started many new projects)?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q10',
+                text: '... you were more social or outgoing than usual (e.g., telephoned friends in the middle of the night)?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q11',
+                text: '... you were unusually interested in sex or had more sex than usual?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q12',
+                text: '... you spent money irresponsibly?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            {
+                id: 'mdq-q13',
+                text: '... you were unusually good at something (e.g., sports, art, music, or business)?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+            // Part 2: Functional Impairment
+            {
+                id: 'mdq-q14',
+                text: 'How much problems has any of these problems caused you?',
+                options: [
+                    { label: 'No problem', value: 0 },
+                    { label: 'Minor problem', value: 1 },
+                    { label: 'Moderate problem', value: 2 },
+                    { label: 'Serious problem', value: 3 },
+                ],
+            },
+            // Part 3: Family History
+            {
+                id: 'mdq-q15',
+                text: 'Have any of your relatives (parents, grandparents, siblings, children, aunts, or uncles) had manic-depressive illness or bipolar disorder?',
+                options: [
+                    { label: 'No', value: 0 },
+                    { label: 'Yes', value: 1 },
+                ],
+            },
+        ],
+        scoreCalculator: (answers) => {
+            let part1YesCount = 0;
+            const mdqTest = tests.find(t => t.id === 'mdq');
+
+            // Calculate Part 1 'Yes' count (questions mdq-q1 to mdq-q13)
+            for (let i = 1; i <= 13; i++) {
+                const qId = `mdq-q${i}`;
+                if (answers.hasOwnProperty(qId) && answers[qId] === 1) { // 1 for Yes
+                    part1YesCount++;
+                }
+            }
+
+            // Get Part 2 severity (question mdq-q14)
+            const part2Severity = answers['mdq-q14'] !== undefined ? answers['mdq-q14'] : null;
+
+            // Get Part 3 family history (question mdq-q15)
+            const part3FamilyHistory = answers['mdq-q15'] !== undefined ? answers['mdq-q15'] : null;
+
+            // Determine if MDQ is positive based on scoring criteria
+            const isMDQPositive = (
+                part1YesCount >= 7 && // At least 7 'Yes' responses in Part 1
+                (part2Severity === 2 || part2Severity === 3) && // Moderate (2) or Serious (3) problem in Part 2
+                part3FamilyHistory === 1 // 'Yes' in Part 3
+            );
+
+            return {
+                part1YesCount,
+                part2Severity,
+                part3FamilyHistory,
+                isMDQPositive,
+            };
+        },
+        scoring: [], // MDQ interpretation is handled by its specific calculator
     },
 ];
