@@ -490,7 +490,7 @@ export const tests = [
     // MDQ (Mood Disorder Questionnaire):
     {
         id: 'mdq',
-        name: 'Mood Disorder Questionnaire (MDQ)',
+        name: 'Mood Disorder Questionnaire',
         shortName: 'MDQ',
         description: 'The MDQ is a self-report screening tool for bipolar disorder. It assesses whether you have experienced symptoms of mania or hypomania, how disruptive they have been, and if there is a family history of bipolar disorder.',
         instructions: 'Please answer the following questions based on your experiences.', // General instruction
